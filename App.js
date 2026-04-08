@@ -12,10 +12,6 @@ import About from "./screens/About.js";
 
 const Stack = createNativeStackNavigator();
 
-const appState = {
-  favourites: [],
-};
-
 export default function App() {
   return (
     <SafeAreaView style={style.appView}>
@@ -24,11 +20,7 @@ export default function App() {
           <Stack.Screen name="Home" component={Home} />
           <Stack.Screen name="Browse" component={Browse} />
           <Stack.Screen name="Exercise Detail" component={ExerciseDetail} />
-          <Stack.Screen
-            name="Favourites"
-            component={Favourites}
-            initialParams={appState}
-          />
+          <Stack.Screen name="Favourites" component={Favourites} />
           <Stack.Screen name="About" component={About} />
         </Stack.Navigator>
       </NavigationContainer>

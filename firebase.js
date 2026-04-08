@@ -2,12 +2,12 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBSpMQdnledYfv95mlAEDe-uZ7f1hkV0c0",
-  authDomain: "my-fit-life-app.firebaseapp.com",
-  projectId: "my-fit-life-app",
-  storageBucket: "my-fit-life-app.firebasestorage.app",
-  messagingSenderId: "609959190694",
-  appId: "1:609959190694:web:1d9c0aca786da4ddea9467",
+  apiKey: "AIzaSyCmVfKYaaTNVz8sa5JqhqCvIbARDYPKRRM",
+  authDomain: "info3141-lab7-aa003.firebaseapp.com",
+  projectId: "info3141-lab7-aa003",
+  storageBucket: "info3141-lab7-aa003.firebasestorage.app",
+  messagingSenderId: "520232652679",
+  appId: "1:520232652679:web:afe97e413195fa3ca8cd22",
 };
 
 const app = initializeApp(firebaseConfig);
