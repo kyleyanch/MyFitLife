@@ -4,7 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import style from "./style.js";
 
-import Home from "./screens/Home.js";
+import Home from "./screens/Main.js";
 import Browse from "./screens/Browse.js";
 import ExerciseDetail from "./screens/ExerciseDetail.js";
 import Favourites from "./screens/Favourites.js";
