@@ -1,8 +1,9 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
+import key from "./FirebaseAPI.js"
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCmVfKYaaTNVz8sa5JqhqCvIbARDYPKRRM",
+  apiKey: key,
   authDomain: "info3141-lab7-aa003.firebaseapp.com",
   projectId: "info3141-lab7-aa003",
   storageBucket: "info3141-lab7-aa003.firebasestorage.app",
