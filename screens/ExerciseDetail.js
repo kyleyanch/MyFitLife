@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
-import { View, Text, ScrollView, Button, Alert } from "react-native";
+import { View, Text, ScrollView, Button, Alert, Image } from "react-native";
+
+import * as ImagePicker from "expo-image-picker";
+import * as MediaLibrary from "expo-media-library";
 
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import firestore from "../firebase.js";
@@ -11,7 +14,7 @@ const DOCUMENT = "favourites";
 
 const favouritesDoc = () => doc(firestore, COLLECTION, DOCUMENT);
 
-export default function ExerciseDetail({ navigation, route }) {
+export default function ExerciseDetail({ route }) {
   const { exercise } = route.params;
 
   const [favourites, setFavourites] = useState([]);
@@ -25,8 +28,7 @@ export default function ExerciseDetail({ navigation, route }) {
     try {
       const result = await getDoc(favouritesDoc());
       if (result.exists()) {
-        const data = result.data();
-        setFavourites(data.list || []);
+        setFavourites(result.data().list || []);
       }
     } catch (e) {
       console.error(e);
@@ -35,7 +37,8 @@ export default function ExerciseDetail({ navigation, route }) {
     }
   };
 
-  const isFavourited = favourites.some((fav) => fav.name === exercise.name);
+  const currentFav = favourites.find((fav) => fav.name === exercise.name);
+  const isFavourited = !!currentFav;
 
   const toggleFavourite = async () => {
     try {
@@ -43,7 +46,7 @@ export default function ExerciseDetail({ navigation, route }) {
       if (isFavourited) {
         updatedList = favourites.filter((fav) => fav.name !== exercise.name);
       } else {
-        updatedList = [...favourites, exercise];
+        updatedList = [...favourites, { ...exercise, photoUri: null }];
       }
       await setDoc(favouritesDoc(), { list: updatedList });
       setFavourites(updatedList);
@@ -51,6 +54,50 @@ export default function ExerciseDetail({ navigation, route }) {
       console.error(e);
       Alert.alert("Error", "Could not update favourites.");
     }
+  };
+
+  const attachPhoto = async (fromCamera) => {
+    try {
+      let result;
+
+      if (fromCamera) {
+        result = await ImagePicker.launchCameraAsync({
+          allowsEditing: true,
+          aspect: [1, 1],
+          quality: 1,
+        });
+      } else {
+        result = await ImagePicker.launchImageLibraryAsync({
+          allowsEditing: true,
+          aspect: [1, 1],
+          quality: 1,
+        });
+      }
+
+      if (result.canceled) return;
+
+      const { uri } = result.assets[0];
+
+      await MediaLibrary.createAssetAsync(uri);
+
+      const updatedList = favourites.map((fav) =>
+        fav.name === exercise.name ? { ...fav, photoUri: uri } : fav,
+      );
+
+      await setDoc(favouritesDoc(), { list: updatedList });
+      setFavourites(updatedList);
+    } catch (e) {
+      console.error(e);
+      Alert.alert("Error", "Could not attach photo.");
+    }
+  };
+
+  const promptPhotoSource = () => {
+    Alert.alert("Attach Photo", "Choose a source", [
+      { text: "Camera", onPress: () => attachPhoto(true) },
+      { text: "Media Library", onPress: () => attachPhoto(false) },
+      { text: "Cancel" },
+    ]);
   };
 
   return (
@@ -86,8 +133,8 @@ export default function ExerciseDetail({ navigation, route }) {
       <Text style={style.detailLabel}>Notes</Text>
       <Text style={style.detailValue}>{exercise.notes}</Text>
 
-      <View style={{ marginTop: 24 }}>
-        {!loading && (
+      {!loading && (
+        <View style={{ marginTop: 24 }}>
           <View style={style.button}>
             <Button
               title={
@@ -96,8 +143,27 @@ export default function ExerciseDetail({ navigation, route }) {
               onPress={toggleFavourite}
             />
           </View>
-        )}
-      </View>
+          {isFavourited && (
+            <View>
+              {currentFav.photoUri ? (
+                <View>
+                  <Image
+                    source={{ uri: currentFav.photoUri }}
+                    style={style.image}
+                  />
+                  <View style={style.button}>
+                    <Button title="Change Photo" onPress={promptPhotoSource} />
+                  </View>
+                </View>
+              ) : (
+                <View style={style.button}>
+                  <Button title="Attach Photo" onPress={promptPhotoSource} />
+                </View>
+              )}
+            </View>
+          )}
+        </View>
+      )}
     </ScrollView>
   );
 }
