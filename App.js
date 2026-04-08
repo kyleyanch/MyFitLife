@@ -1,20 +1,37 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView } from "react-native-safe-area-context";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
+import style from "./style.js";
+
+import Home from "./screens/Home.js";
+import Browse from "./screens/Browse.js";
+import ExerciseDetail from "./screens/ExerciseDetail.js";
+import Favourites from "./screens/Favourites.js";
+import About from "./screens/About.js";
+
+const Stack = createNativeStackNavigator();
+
+const appState = {
+  favourites: [],
+};
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaView style={style.appView}>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Home">
+          <Stack.Screen name="Home" component={Home} />
+          <Stack.Screen name="Browse" component={Browse} />
+          <Stack.Screen name="Exercise Detail" component={ExerciseDetail} />
+          <Stack.Screen
+            name="Favourites"
+            component={Favourites}
+            initialParams={appState}
+          />
+          <Stack.Screen name="About" component={About} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

@@ -77,4 +77,22 @@ export default StyleSheet.create({
     marginVertical: 8,
     color: "#333",
   },
+  card: {
+    backgroundColor: "#f0f0f0",
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    padding: 16,
+    marginBottom: 16,
+  },
+  cardTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 6,
+  },
+  cardBody: {
+    fontSize: 14,
+    color: "#555",
+    marginBottom: 10,
+  },
 });
